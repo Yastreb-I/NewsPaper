@@ -1,0 +1,83 @@
+Последовательность команд:
+0) Подготовка и запуск консоли:
+cd NewsPaper
+py manage.py makemigrations
+py manage.py migrate
+py manage.py shell
+from news.models import *
+
+1) Создаем двух пользователей:
+userOne = User.objects.create(username='Aleks', first_name='Aleksandr')
+userTwo = User.objects.create(username='Olly', first_name='Olga')
+2) Создаем два объекта модели Author, связанные с пользователями.
+
+Author.objects.create(userAuthor=userOne)
+Author.objects.create(userAuthor=userTwo)
+
+3) Добавлаем 4 категории:
+Category.objects.create(nameNewsCategories='Politics')
+Category.objects.create(nameNewsCategories='Sports')
+Category.objects.create(nameNewsCategories='Economics')
+Category.objects.create(nameNewsCategories='Science')
+
+4) Добавлем 2 статьи и 1 новость.
+Post.objects.create(author=Author.objects.get(userAuthor=User.objects.get(username='Aleks')), typePost='NS', headPost='Went for a bike ride', textPost='I drove 31 km around the city for 100 minutes.')
+
+Post.objects.create(author=Author.objects.get(userAuthor=User.objects.get(username='Aleks')), typePost='AR', headPost='7 books that will teach you how to plan a budget', textPost='How to turn a dream into reality? What financial instruments will allow you to save up for a car, an apartment, education for children, a comfortable old age? In this collection there are books that will help you begin to realize your plans.')
+
+Post.objects.create(author=Author.objects.get(userAuthor=User.objects.get(username='Olly')), typePost='AR', headPost='What is the difference between web, UX and UI design', textPost='The main difference between web, UX and UI designers is in the area of responsibility and specialization. The UX designer is responsible for User Experience (from the English "user experience") and usability, the UI designer is responsible for the User Interface (from the English "user interface"), that is, the visual representation. And a web designer creates web applications, taking into account both of these directions.\nWe can say that a web designer is a versatile specialist who understands several areas, and UX and UI designers are specialists of a narrower profile. To summarize, UI is a visual, and UX is the usability of the product.')
+5) Присваиваем статьям и новости категории.
+post1 = Post.objects.get(pk=1)
+post2 = Post.objects.get(pk=2)
+post3 = Post.objects.get(pk=3)
+cat1 = Category.objects.get(nameNewsCategories='Sports')
+cat2 = Category.objects.get(nameNewsCategories='Science')
+cat3 = Category.objects.get(nameNewsCategories='Economics')
+post1.categoriesPost.add(cat1)
+post2.categoriesPost.add(cat2)
+post3.categoriesPost.add(cat2, cat3)
+
+6) Создем 4 комментария к разным объектам модели Post
+Comment.objects.create(commentUser=User.objects.get(username='Aleks'), commentPost=Post.objects.get(pk=2), textComment='cool')
+Comment.objects.create(commentUser=User.objects.get(username='Aleks'), commentPost=Post.objects.get(pk=3), textComment='Great!')
+Comment.objects.create(commentUser=User.objects.get(username='Olly'), commentPost=Post.objects.get(pk=3), textComment='Very interesting!')
+Comment.objects.create(commentUser=User.objects.get(username='Olly'), commentPost=Post.objects.get(pk=1), textComment='I want that too!')
+
+7) Ставим like и dislike к статьям/новостям и комментариям
+Post.objects.get(pk=1).like()
+Post.objects.get(pk=3).like()
+Post.objects.get(pk=2).like()
+Post.objects.get(pk=1).like()
+Post.objects.get(pk=2).like()
+Post.objects.get(pk=3).like()
+Post.objects.get(pk=1).dislike()
+Post.objects.get(pk=3).like()
+Comment.objects.get(pk=1).dislike()
+Comment.objects.get(pk=2).like()
+Comment.objects.get(pk=3).like()
+Comment.objects.get(pk=2).dislike()
+Comment.objects.get(pk=3).like()
+Comment.objects.get(pk=3).like()
+
+8) Обновление рейтингов пользователей.
+Author.objects.get(userAuthor=User.objects.get(username='Aleks')).update_rating()
+Author.objects.get(userAuthor=User.objects.get(username='Olly')).update_rating()
+ratingUserOne = Author.objects.get(userAuthor=User.objects.get(username='Aleks'))
+ratingUserOne.ratingAuthor
+ratingUserTwo = Author.objects.get(userAuthor=User.objects.get(username='Olly'))
+ratingUserTwo.ratingAuthor
+
+9) Вывод username и рейтинг лучшего пользователя
+bestAuthor = Author.objects.all().order_by('-ratingAuthor').values('userAuthor__username', 'ratingAuthor')[0]
+print("Имя лучшего автора: ", bestAuthor['userAuthor__username'], "   Рейтинг: ", bestAuthor['ratingAuthor'])
+
+10) Вывод даты добавления, username автора, рейтинг, заголовок и превью лучшей статьи, на основе лайках/дислайках к этой статье.
+
+idBestPost = Post.objects.all().order_by("-ratingPost")[:1].values("id")
+bestPost = Post.objects.values_list("dateCreation", "author__userAuthor__username","ratingPost","headPost").get(id=idBestPost) + (Post.objects.get(id=idBestPost).preview(),)
+print(bestPost)
+
+11) Вывод всех комментариев (дата, пользователь, рейтинг, текст) к этой статье.
+
+allCommetsBestPost = Comment.objects.select_related().filter(commentPost=idBestPost).values("dateCreation","commentUser__username","ratingComment", "textComment")
+print(allCommetsBestPost)
