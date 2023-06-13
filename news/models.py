@@ -29,9 +29,15 @@ class Author(models.Model):
         self.ratingAuthor = col_com + col_oth + col_post * 3
         self.save()
 
+    def __str__(self):
+        return self.userAuthor.username
+
 
 class Category(models.Model):
     nameNewsCategories = models.CharField(max_length=96, unique=True)
+
+    def __str__(self):
+        return self.nameNewsCategories
 
 
 class Post(models.Model):
@@ -48,6 +54,12 @@ class Post(models.Model):
     headPost = models.CharField(max_length=192)
     textPost = models.TextField()
     ratingPost = models.IntegerField(default=0)
+
+    def __str__(self):
+        str_post = f"Автор: {self.author}; \nКатегория: {self.categoriesPost}; \n" \
+                   f"Дата создания: {self.dateCreation}; \nЗаголовок: {self.headPost}; \nСодержание: {self.textPost}. "
+
+        return str_post
 
     def like(self):
         self.ratingPost += 1
@@ -75,7 +87,10 @@ class Comment(models.Model):
     ratingComment = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.commentUser.username
+        try:
+            return self.commentPost.author.userAuthor.username
+        except:
+            return self.commentUser.username
 
     def like(self):
         self.ratingComment += 1

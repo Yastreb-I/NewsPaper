@@ -1,0 +1,19 @@
+<!--  наследуемся от шаблона default.html, который мы создавали ещё во времена flatpages -->
+{% extends 'default.html' %}
+{% load custom_filters %}
+
+<!-- Название у нас будет proudcts -->
+{% block title %}
+{{ one_news.headPost }}
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим сам товар, айди которого было передано в адрес -->
+{% block content %}
+<h1>{{ one_news.headPost | censor }}</h1>
+<h6> {{ one_news.dateCreation | date:'d M Y h:m' }}</h6>
+<p> {{ one_news.textPost | censor }}</p>
+
+<h6>{{ one_news.author.userAuthor.username }}</h6>
+
+
+{% endblock content %}
