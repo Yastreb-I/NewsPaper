@@ -1,0 +1,65 @@
+<!--  наследуемся от шаблона default.html, который мы создавали ещё во времена flatpages -->
+{% extends 'default.html' %}
+{% load custom_filters %}
+
+<!-- Название у нас будет proudcts -->
+{% block title %}
+News
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим сам товар, айди которого было передано в адрес -->
+{% block content %}
+
+    <h1>Всего {{ news | length }} статьи </h1>
+
+    <hr>
+    {% if news %} <!-- Если есть товары, то выводим таблицу с ними -->
+        <table>
+            <tr>
+                <td>
+                    №
+                </td>
+                <td>
+                    Заголовок статьи
+                </td>
+                <td>
+                    Текст статьи
+                </td>
+                <td>
+                    Дата создания
+                </td>
+                <td>
+                    Автор
+                </td>
+
+            </tr>
+        {% for one_news in news %} <!-- Для каждой статьи будете генерироваться новая строчка,
+         т.е. новый html код. При этом сам цикл работает точно так же, как и в python. product — переменная цикла,
+          т.е. наш товар, взятый из общего списка -->
+            <tr>
+                <td>
+                    {{ one_news.id}}
+                </td>
+                <td>
+                    {{ one_news.headPost | censor }} <!-- не забываем,
+                    что переменные в шаблоне ничем не отличаются от переменных в python.
+                    Здесь так же можно получать доступ к полям класса.
+                    Например, здесь мы выводим имя, в следующем столбце описание, и т.д.  -->
+                </td>
+                <td>
+                    {{ one_news.textPost|truncatewords:20 | censor}}
+                </td>
+                <td>
+                    {{ one_news.dateCreation | date:'d M Y h:m:s' }}
+                </td>
+                <td>
+                     {{ one_news.author.userAuthor.username }}
+                </td>
+
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <h2>Товаров статей!</h2>
+    {% endif %}
+{% endblock content %}
