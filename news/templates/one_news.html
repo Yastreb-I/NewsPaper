@@ -1,0 +1,22 @@
+<!--  наследуемся от шаблона default.html-->
+{% extends 'default.html' %}
+{% load custom_filters %}
+
+<!-- Название поста-->
+{% block title %}
+{{ one_news.headPost }}
+{% endblock title %}
+
+
+{% block content %}
+<h1>{{ one_news.headPost | censor }}</h1>
+<h6> {{ one_news.dateCreation | date:'d M Y h:m' }}</h6>
+<p> {{ one_news.textPost | censor }}</p>
+
+<h6>{{ one_news.author.userAuthor.username }}</h6>
+
+<div class="d-flex justify-content-end mb-4">
+    <a class="btn btn-primary text-uppercase" href="{% url 'news' %}">На главную →</a>
+</div>
+
+{% endblock content %}

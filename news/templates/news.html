@@ -1,0 +1,70 @@
+<!--  наследуемся от шаблона default.html-->
+{% extends 'default.html' %}
+{% load custom_filters %}
+
+
+{% block title %}
+News
+{% endblock title %}
+
+{% block content %}
+
+    <h1>Всего {{ paginator.count }} статей </h1>
+
+    <hr>
+
+    {% if news %} <!-- Если есть новости, то выводим их -->
+        {% for news in page_obj %}
+            <!-- Post preview-->
+            <div class="post-preview">
+            <a href="{% url 'one_news' news.id %}">
+                <h2 class="post-title">{{ news.headPost | censor }}</h2>
+            </a>
+                <h3 class="post-subtitle"> {{ news.textPost|truncatewords:20 | censor}}</h3>
+                <p class="post-meta"> Posted by
+                    <a href="#!"> {{ news.author.userAuthor.username }}</a>
+                    on {{ news.dateCreation | date:'d M Y h:m' }}
+                    <a href="{% url 'post_update' news.id %}"><u> Редактировать </u></a> <!-- добавим ссылку на редактирование товара-->
+                    <a href="{% url 'post_delete' news.id %}"><u> Удалить </u></a> <!-- добавим ссылку на удаление товара-->
+                </p>
+            </div>
+            <!-- Divider-->
+            <hr class="my-4" />
+
+        {% endfor %}
+        {% if paginator.count > 3 %}
+             <!-- Pager-->
+<!--                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>-->
+            <div class="pagers" style="display: flex;justify-content: space-between;">
+<!--                <span class="page_first">-->
+                <!-- Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу -->
+                {% if page_obj.has_previous %}
+                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="?page=1">Первая страница</a></div>
+                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase"  href="?page={{ page_obj.previous_page_number }}"> < </a></div>
+                {% endif %}
+<!--                    </span>-->
+                <!-- Показываем только текущую страницу и ближайшие к ней, чтобы список не тянулся и не захламлял страницу -->
+<!--                <span class="page_current">-->
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase">{{ num }}</a></div>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                       <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="?page={{ num }}">{{ num }}</a></div>
+                    {% endif %}
+                {% endfor %}
+<!--               </span>-->
+
+            <!-- Если есть следующая страница, то даём ссылку на неё и на самую последнюю страницу -->
+<!--                <span class="page_last">-->
+                {% if page_obj.has_next %}
+                  <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="?page={{ page_obj.next_page_number }}">    >    </a></div>
+                  <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="?page={{ page_obj.paginator.num_pages }}">Последняя</a></div>
+                {% endif %}
+<!--                </span>-->
+            </div>
+        {% endif %}
+
+    {% else %}
+        <h2>Нет статей!</h2>
+    {% endif %}
+{% endblock content %}

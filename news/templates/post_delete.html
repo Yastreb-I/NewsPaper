@@ -1,0 +1,35 @@
+<!--  наследуемся от шаблона default.html-->
+{% extends 'default.html' %}
+{% load custom_filters %}
+
+
+{% block title %}
+Удаление постов
+{% endblock title %}
+
+{% block content %}
+
+    <h1>Вы действительно хотите удалить данный пост?</h1>
+    <hr>
+        <!-- Post preview-->
+            <div class="post-preview">
+                <h2 class="post-title">{{ post.headPost }}</h2>
+                </a>
+                <h3 class="post-subtitle"> {{ post.textPost }}</h3>
+
+              <p class="post-meta">
+                  Posted by {{ post.author.userAuthor.username }}
+              </p>
+            </div>
+            <!-- Divider-->
+            <hr class="my-4" />
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="d-flex justify-content-end mb-4">
+    <input class="btn btn-primary text-uppercase" type="submit" value="Подтвердить удаление">
+</div>
+
+</form>
+
+{% endblock content %}
