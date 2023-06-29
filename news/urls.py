@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import NewsList, NewsDetail, SearchPost, PostCreateView  # импортируем наше представление
-from .views import ProductUpdateView, ProductDeleteView
+from .views import PostUpdateView, PostDeleteView
 urlpatterns = [
     # path — означает путь.
     path('', NewsList.as_view(), name="news"),
@@ -10,6 +10,6 @@ urlpatterns = [
     path('<int:pk>', NewsDetail.as_view(), name="one_news"),  # pk — это первичный ключ новости,
     # который будет выводиться у нас в шаблон
     path('add', PostCreateView.as_view(), name='post_create'),  # Ссылка на создание статьи
-    path('post_create/<int:pk>', ProductUpdateView.as_view(), name="post_update"),  # Ссылка на редактирование статьи
-    path('post_delete/<int:pk>', ProductDeleteView.as_view(), name="post_delete"),  # Ссылка на удаление статьи
+    path('post_create/<int:pk>', PostUpdateView.as_view(), name="post_update"),  # Ссылка на редактирование статьи
+    path('post_delete/<int:pk>', PostDeleteView.as_view(), name="post_delete"),  # Ссылка на удаление статьи
 ]

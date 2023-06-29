@@ -1,0 +1,14 @@
+.head_h1 {
+    text-align: center;
+    }
+
+.login-ili {
+    text-align: center;
+}
+
+.password {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}

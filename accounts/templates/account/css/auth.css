@@ -1,0 +1,15 @@
+.head_h1 {
+    text-align: center;
+}
+
+.login-ili {
+    text-align: center;
+}
+
+.secondaryAction {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}

@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
 
+from allauth.account.forms import SignupForm
+from django.contrib.auth.models import Group
+
 
 class Author(models.Model):
     userAuthor = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -106,3 +109,4 @@ class Comment(models.Model):
         self.save()
 
 # Create your models here.
+
