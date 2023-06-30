@@ -131,6 +131,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 ACCOUNT_FORMS = {'signup': 'accounts.forms.CommonLoginForm',}
+
 # STATICFILES_DIRS = [BASE_DIR / "accounts/templates/account"]
 
 # Internationalization

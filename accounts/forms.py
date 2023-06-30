@@ -1,6 +1,5 @@
 from allauth.account.forms import SignupForm
 from django.contrib.auth.models import Group
-from django import forms
 
 
 class CommonLoginForm(SignupForm):

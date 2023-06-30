@@ -17,9 +17,9 @@
         <link href="{% static 'https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' %}" rel="stylesheet" type="text/css" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
-        <link href="{% static 'css/auth.css' %}" rel="stylesheet" />
         <script src="{% static 'js/jquery.mask.js' %}" ></script>
         <script src="{% static 'js/jquery.min.js' %}" ></script>
+        <link href="{% static 'css/auth.css' %}" rel="stylesheet" />
 
         {% block scripts %}
 
@@ -48,33 +48,39 @@
                                                 href="{% url 'news' %}">Все статьи</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4"
                                                 href="{% url 'search' %}">Поиск статей</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4"
-                                                href="{% url 'post_create' %}">Написать новость/статью</a></li>
 
-                        <li class="nav-item">
 
                             {% if user.is_authenticated %}
+                                {% if is_not_author %}
 
-                                <a class="nav-link px-lg-3 py-3 py-lg-4"
-                                                    href="{% url 'account_logout' %}">
-                                    <span class="px-lg-3 "> {{user.username}}  </span>
-                                     Выход
+                                    <li class="nav-item">
+
+                                        <a class="nav-link px-lg-3 py-3 py-lg-4 button2" href="../accounts/upgrade/">
+                                            Жми! Чтобы стать автором!</a>
+                                    </li>
+
+                                    {% else %}
+
+                                    <li class="nav-item">
+                                        <a class="nav-link px-lg-3 py-3 py-lg-4"
+                                                        href="{% url 'post_create' %}">Написать новость/статью</a>
+                                    </li>
+                                    {% endif %}
+
+                                <li class="nav-item">
+                                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'account_logout' %}">
+                                    <span> {{user.username}} -> Выход </span>
+
                                 </a>
-
-<!--                            {% if is_not_author %}-->
-<!--                            <button> <a href="accounts/upgrade/"> Жми! Чтобы стать автором!</a> </button>-->
-<!--                            {% endif %}-->
-
 
                             {% else %}
 
-                                <a class="nav-link px-lg-3 py-3 py-lg-4"
-                                                    href="{% url 'account_login' %}">
-                                    Вход
+                                <li class="nav-item"> <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'account_login' %}">
+                                    <span> Вход </span>
                                 </a>
+                                </li>
                             {% endif %}
 
-                        </li>
                     </ul>
                 </div>
             </div>
