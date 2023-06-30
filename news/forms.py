@@ -21,3 +21,7 @@ class PostForm(ModelForm):
             'headPost': TextInput(attrs={"style": "width: 60vw; "}),
 
         }
+
+
+
+

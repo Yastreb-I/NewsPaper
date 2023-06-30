@@ -39,6 +39,8 @@ search news
                   Posted by
                   <a href="#!"> {{ search.author.userAuthor.username }}</a>
                   on {{ search.dateCreation | date:'d M Y h:m' }}
+                  <a href="{% url 'post_update' search.id %}"><u> Редактировать </u></a>
+                  <a href="{% url 'post_delete' search.id %}"><u> Удалить </u></a>
               </p>
             </div>
             <!-- Divider-->
@@ -50,21 +52,37 @@ search news
             <div class="pagers" style="display: flex;justify-content: space-between;">
                 <!-- Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу -->
                 {% if page_obj.has_previous %}
-                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="?page=1">Первая страница</a></div>
-                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase"  href="?page={{ page_obj.previous_page_number }}"> < </a></div>
+                    <div class="d-flex justify-content-end mb-4">
+                        <a class="btn btn-primary text-uppercase" href="?page=1">Первая страница</a></div>
+                    <div class="d-flex justify-content-end mb-4">
+                        <a class="btn btn-primary text-uppercase" href="?page={{ page_obj.previous_page_number }}"> <
+                        </a>
+                    </div>
                 {% endif %}
                 <!-- Показываем только текущую страницу и ближайшие к ней, чтобы список не тянулся и не захламлял страницу -->
                 {% for num in page_obj.paginator.page_range %}
                     {% if page_obj.number == num %}
-                        <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase">{{ num }}</a></div>
+                        <div class="d-flex justify-content-end mb-4">
+                            <a class="btn btn-primary text-uppercase">{{ num }}</a>
+                        </div>
                     {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                       <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="?page={{ num }}">{{ num }}</a></div>
+                       <div class="d-flex justify-content-end mb-4">
+                           <a class="btn btn-primary text-uppercase" href="?page={{ num }}">{{ num }}</a>
+                       </div>
                     {% endif %}
                 {% endfor %}
             <!-- Если есть следующая страница, то даём ссылку на неё и на самую последнюю страницу -->
                 {% if page_obj.has_next %}
-                  <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="?page={{ page_obj.next_page_number }}">    >    </a></div>
-                  <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="?page={{ page_obj.paginator.num_pages }}">Последняя</a></div>
+                  <div class="d-flex justify-content-end mb-4">
+                      <a class="btn btn-primary text-uppercase" href="?page={{ page_obj.next_page_number }}">
+                          >
+                      </a>
+                  </div>
+                  <div class="d-flex justify-content-end mb-4">
+                      <a class="btn btn-primary text-uppercase" href="?page={{ page_obj.paginator.num_pages }}">
+                          Последняя
+                      </a>
+                  </div>
                 {% endif %}
             </div>
         {% endif %}

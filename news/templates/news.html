@@ -24,8 +24,8 @@ News
                 <p class="post-meta"> Posted by
                     <a href="#!"> {{ news.author.userAuthor.username }}</a>
                     on {{ news.dateCreation | date:'d M Y h:m' }}
-                    <a href="{% url 'post_update' news.id %}"><u> Редактировать </u></a> <!-- добавим ссылку на редактирование товара-->
-                    <a href="{% url 'post_delete' news.id %}"><u> Удалить </u></a> <!-- добавим ссылку на удаление товара-->
+                    <a href="{% url 'post_update' news.id %}"><u> Редактировать </u></a> <!-- добавим ссылку на редактирование статьи-->
+                    <a href="{% url 'post_delete' news.id %}"><u> Удалить </u></a> <!-- добавим ссылку на удаление статьи-->
                 </p>
             </div>
             <!-- Divider-->

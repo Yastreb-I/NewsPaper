@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView  # импортируем класс, который говорит нам о том,
 # что в этом представлении мы будем выводить список объектов из БД
 from datetime import datetime
-from django.core.paginator import Paginator
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
 
 from .models import Post
 from .filters import PostFilter  # импортируем фильтр
@@ -21,7 +22,7 @@ class NewsList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['time_now'] = datetime.utcnow()  # добавим переменную текущей даты time_now
-        # context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
+        context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
         # context['filter'] = PostFilter(self.request.GET,
         #                                   queryset=self.get_queryset())  # вписываем наш фильтр в контекст
         return context
@@ -48,9 +49,10 @@ class SearchPost(ListView):
 
 
 # Дженерик для создания объекта. Надо указать только имя шаблона и класс формы
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'post_create.html'
     form_class = PostForm
+    permission_required = ('news.add_post',)
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)  # создаём новую форму, забиваем в неё данные из POST-запроса
@@ -62,22 +64,25 @@ class PostCreateView(CreateView):
 
 
 # Дженерик для редактирования объекта
-class ProductUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'post_create.html'
     form_class = PostForm
+    permission_required = ('news.change_post',)
 
-    # метод get_object мы используем вместо queryset,
-    # чтобы получить информацию об объекте который мы собираемся редактировать
+    # метод get_object мы используем вместо queryset, чтобы получить информацию об объекте,
+    # который мы собираемся редактировать
     def get_object(self, **kwargs):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
 
 
 # дженерик для удаления товара
-class ProductDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     template_name = 'post_delete.html'
+    permission_required = ('news.delete_post',)
     queryset = Post.objects.all()
     success_url = '/'
 
     def get_success_url(self):
         return f'/news/'
+

@@ -20,6 +20,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('news/', include('news.urls')),
-    # делаем так, чтобы все адреса из нашего приложения
-    # (news/urls.py) сами автоматически подключались когда мы их добавим.
-]
+    path('account/', include('allauth.urls')),
+    path('accounts/', include('accounts.urls')),
+
+   ]
