@@ -3,9 +3,11 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 # что в этом представлении мы будем выводить список объектов из БД
 from datetime import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.shortcuts import redirect
+from django.contrib import messages
 
 
-from .models import Post
+from .models import Post, Author
 from .filters import PostFilter  # импортируем фильтр
 from .forms import PostForm
 
@@ -17,14 +19,15 @@ class NewsList(ListView):
     context_object_name = 'news'  # это имя списка, в котором будут лежать все объекты,
     # его надо указать, чтобы обратиться к самому списку объектов через HTML-шаблон
     queryset = Post.objects.order_by('-dateCreation')  # Вывод новых статей в начало страницы
-    paginate_by = 3  # поставим постраничный вывод в 2 элемента
+    paginate_by = 3  # поставим постраничный вывод в 3 элемента
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['time_now'] = datetime.utcnow()  # добавим переменную текущей даты time_now
-        context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
-        # context['filter'] = PostFilter(self.request.GET,
-        #                                   queryset=self.get_queryset())  # вписываем наш фильтр в контекст
+        context['is_not_group_author'] = not self.request.user.groups.filter(name='authors').exists()
+        # author = Author.objects.get(userAuthor=self.request.user)
+        context['is_author'] = True  #  self.request.user.filter(name=author).exists()
+        # context['request'] = self.request.user
         return context
 
 
@@ -40,7 +43,7 @@ class SearchPost(ListView):
     template_name = 'search.html'
     context_object_name = 'search'
     queryset = Post.objects.order_by('-dateCreation')
-    paginate_by = 4
+    paginate_by = 3
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -52,6 +55,7 @@ class SearchPost(ListView):
 class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'post_create.html'
     form_class = PostForm
+    success_url = 'news/'
     permission_required = ('news.add_post',)
 
     def post(self, request, *args, **kwargs):
@@ -68,12 +72,19 @@ class PostUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'post_create.html'
     form_class = PostForm
     permission_required = ('news.change_post',)
+    success_url = '/'
+    # login_url = '/accounts/login/'
 
     # метод get_object мы используем вместо queryset, чтобы получить информацию об объекте,
     # который мы собираемся редактировать
     def get_object(self, **kwargs):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
+    #
+    # def handle_no_permission(self):
+    #     # add custom message
+    #     messages.error(self.request, 'Удалить статью может только автор этой статьи')
+    #     return redirect(self.get_login_url())
 
 
 # дженерик для удаления товара

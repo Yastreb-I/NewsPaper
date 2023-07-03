@@ -38,9 +38,14 @@ class Author(models.Model):
 
 class Category(models.Model):
     nameNewsCategories = models.CharField(max_length=96, unique=True)
+    subscribers = models.ManyToManyField(User)
+    #
 
     def __str__(self):
         return self.nameNewsCategories
+    #
+    # def __repr__(self):
+    #     return self.nameNewsCategories
 
 
 class Post(models.Model):
@@ -64,10 +69,13 @@ class Post(models.Model):
 
         return str_post
 
+    def get_categories_post(self):
+        return self.categoriesPost.all()
+
     # добавим абсолютный путь,
     # чтобы после создания нас перебрасывало на страницу с новостью
     def get_absolute_url(self):
-         return f'/news/{self.id}'
+        return f'/news/{self.id}'
 
     def like(self):
         self.ratingPost += 1

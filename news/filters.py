@@ -2,7 +2,7 @@ from django_filters import FilterSet, DateFilter, ModelChoiceFilter, CharFilter 
 from django import forms
 from datetime import date
 
-from .models import Post, Author
+from .models import Post, Author, Category
 
 
 class DateSelectorWidget(forms.MultiWidget):
@@ -48,13 +48,15 @@ class PostFilter(FilterSet):
         widget=DateSelectorWidget()
     )
     author = ModelChoiceFilter(queryset=Author.objects.all(), label='Автор ',)
-
+    categoriesPost = ModelChoiceFilter(queryset=Category.objects.all(), label='Категория ',)
     # Здесь в мета классе надо предоставить модель и указать поля,
     # по которым будет фильтроваться (т.е. подбираться) информация о статьях
+
     class Meta:
         model = Post
         fields = ('headPost',
                   'dateCreation',
                   'author',
+                  'categoriesPost',
                   )  # поля, которые мы будем фильтровать
         # (т.е. отбирать по каким-то критериям, имена берутся из моделей)

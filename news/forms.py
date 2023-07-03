@@ -5,6 +5,8 @@ from django.utils.translation import gettext_lazy as gl
 
 # Создаём модельную форму
 class PostForm(ModelForm):
+    # categoriesPost = Post.categoriesPost.nameNewsCategories
+    # categoriesPost = Post.categoriesPost.category.nameNewsCategories
 
     class Meta:
         model = Post
@@ -22,6 +24,11 @@ class PostForm(ModelForm):
 
         }
 
-
+#
+# categories = Category.objects.filter(postcategory__postThrough=instance)   # находим категории данного поста
+# subscribers_mail = []
+# for category in categories:   # перебираем категории
+#     for sub in category.subscribers.values('email'):    # перебираем email подписчиков
+#         subscribers_mail.append(sub['email'])   # на выходе получаем список адресов для рассылки
 
 

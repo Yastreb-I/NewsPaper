@@ -27,6 +27,7 @@ search news
     </form>
     <hr>
     {% if search %} <!-- Если есть новости, то выводим их -->
+
         {% for search in filter.qs %}
         <!-- Post preview-->
             <div class="post-preview">
@@ -36,9 +37,9 @@ search news
                 <h3 class="post-subtitle"> {{ search.textPost|truncatewords:20 | censor}}</h3>
 
               <p class="post-meta">
-                  Posted by
+                  Опубликовано
                   <a href="#!"> {{ search.author.userAuthor.username }}</a>
-                  on {{ search.dateCreation | date:'d M Y h:m' }}
+                  в {{ search.dateCreation | date:'d M Y h:m' }}
                   <a href="{% url 'post_update' search.id %}"><u> Редактировать </u></a>
                   <a href="{% url 'post_delete' search.id %}"><u> Удалить </u></a>
               </p>
@@ -47,7 +48,7 @@ search news
             <hr class="my-4" />
         {% endfor %}
 
-        {% if paginator.count > 3 %}
+            {% if paginator.count > 3 %}
              <!-- Pager-->
             <div class="pagers" style="display: flex;justify-content: space-between;">
                 <!-- Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу -->

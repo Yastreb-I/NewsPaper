@@ -10,7 +10,7 @@ News
 {% block content %}
 
     <h1>Всего {{ paginator.count }} статей </h1>
-
+    <!--  <h6> {{ request }}</h6> -->
     <hr>
 
     {% if news %} <!-- Если есть новости, то выводим их -->
@@ -21,17 +21,30 @@ News
                 <h2 class="post-title">{{ news.headPost | censor }}</h2>
             </a>
                 <h3 class="post-subtitle"> {{ news.textPost|truncatewords:20 | censor}}</h3>
-                <p class="post-meta"> Posted by
-                    <a href="#!"> {{ news.author.userAuthor.username }}</a>
-                    on {{ news.dateCreation | date:'d M Y h:m' }}
-                    <a href="{% url 'post_update' news.id %}"><u> Редактировать </u></a> <!-- добавим ссылку на редактирование статьи-->
-                    <a href="{% url 'post_delete' news.id %}"><u> Удалить </u></a> <!-- добавим ссылку на удаление статьи-->
+                <p class="post-meta"> Опубликовано
+                    <a href="{% url 'search' news.author.id %}"> {{ news.author.userAuthor.username }}</a>  <!-- добавить ссылку на поиск по автору -->
+                    в {{ news.dateCreation | date:'d M Y h:m' }}
+                    <a href="#!"><u> Подписаться на автора </u></a> <!-- добавим ссылку на рассылку-->
                 </p>
+                <p class="post-meta"> Категория: {% for category in news.get_categories_post %}
+                                                    <a href="{% url 'search' category.id %}"> {{category}}</a>  <!-- добавим ссылку на сортировку по категориям-->
+                                                    <a href="#!"><u> Подписаться на {{category}}</u></a> <!-- добавим ссылку на рассылку {{ news.categoriesPost }}-->
+                    {% endfor %}
+
+
+
+                    {% if is_author %}
+                        <a href="{% url 'post_update' news.id %}"><u> Редактировать </u></a> <!-- добавим ссылку на редактирование статьи-->
+                        <a href="{% url 'post_delete' news.id %}"><u> Удалить </u></a> <!-- добавим ссылку на удаление статьи-->
+                    {% endif %}
+                </p>
+
             </div>
             <!-- Divider-->
             <hr class="my-4" />
 
         {% endfor %}
+
         {% if paginator.count > 3 %}
              <!-- Pager-->
 <!--                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>-->

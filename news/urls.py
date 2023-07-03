@@ -5,6 +5,8 @@ urlpatterns = [
     # path — означает путь.
     path('', NewsList.as_view(), name="news"),
     path('search', SearchPost.as_view(), name="search"),
+    path('search/&categoriesPost=<int:pk>', SearchPost.as_view(), name="search"),
+    path('search/&author=<int:pk>', SearchPost.as_view(), name="search"),
     # т.к. сам по себе это класс, то нам надо представить этот класс в виде view.
     # Для этого вызываем метод as_view
     path('<int:pk>', NewsDetail.as_view(), name="one_news"),  # pk — это первичный ключ новости,

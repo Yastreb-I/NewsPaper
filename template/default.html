@@ -51,11 +51,11 @@
 
 
                             {% if user.is_authenticated %}
-                                {% if is_not_author %}
+                                {% if is_not_group_author %}
 
                                     <li class="nav-item">
 
-                                        <a class="nav-link px-lg-3 py-3 py-lg-4 button2" href="../accounts/upgrade/">
+                                        <a class="nav-link px-lg-3 py-3 py-lg-4" href="../accounts/upgrade/">
                                             Жми! Чтобы стать автором!</a>
                                     </li>
 
