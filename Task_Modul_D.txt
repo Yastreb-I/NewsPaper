@@ -34,3 +34,27 @@
 В классах-представлениях добавления и редактирования новостей и статей добавлена проверка прав доступа.
 (NewsPaper/news/views.py)
 
+По заданию 6 сделано:
+1) Добавлено пользователю возможность подписываться на рассылку новостей в какой-либо категории.
+Это можно через странички (ссылка/кнопка), в который пользователь может подписаться:
+NewsPaper/news/templates/news.html
+ или 
+NewsPaper/accounts/templates/user_account.html
+Сама подписка реализована в NewsPaper/accounts/views.py и NewsPaper/accounts/urls.py
+2) При добавлении новости из этой категории пользователю на email, указанный при регистрации
+Это реализовано с помощью сигналов NewsPaper/news/signals.py и выполнение функций NewsPaper/news/tasks/base.py
+
+3) Добавилено приветсвенное письмо при регистрации.
+Это реализовано с помощью сигналов NewsPaper/news/signals.py и выполнение функций NewsPaper/news/tasks/base.py
+
+4) Добавлено ограничение количества постов в сутки.
+Это реализовано в NewsPaper/news/views.py и NewsPaper/news/templates/post_create.html
+
+5) Сделана еженедельная рассылка подписавшимся пользователям.
+Функция: NewsPaper/news/tasks/base.py,
+Планировщик: NewsPaper/news/management/commands/runapscheduler.py
+
+
+
+
+

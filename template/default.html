@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -11,10 +11,10 @@
         <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
         <!-- Font Awesome icons (free version)-->
         <script src="{% static 'js/all.js' %}" crossorigin="anonymous"></script>
-<!--        <script src="{% static 'https://use.fontawesome.com/releases/v6.3.0/js/all.js' %}" crossorigin="anonymous"></script>-->
+<!--        <script src="{% static 'https://use.fontawesome.com/releases/v6.3.0/js/all.js' %}" crossorigin="anonymous" rel="stylesheet"></script>-->
         <!-- Google fonts-->
-        <link href="{% static 'https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' %}" as="font" type="font/woff2" rel="stylesheet" >
+        <link href="{% static 'https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' %}"  as="font" type="font/woff2" rel="stylesheet">
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
         <script src="{% static 'js/jquery.mask.js' %}" ></script>
@@ -55,7 +55,7 @@
 
                                     <li class="nav-item">
 
-                                        <a class="nav-link px-lg-3 py-3 py-lg-4" href="../accounts/upgrade/">
+                                        <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'upgrade' %}">
                                             Жми! Чтобы стать автором!</a>
                                     </li>
 
@@ -68,8 +68,8 @@
                                     {% endif %}
 
                                 <li class="nav-item">
-                                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'account_logout' %}">
-                                    <span> {{user.username}} -> Выход </span>
+                                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'user_accounts' %}">
+                                    <span> {{user.username}} </span>
 
                                 </a>
 
