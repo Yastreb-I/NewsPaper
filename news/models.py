@@ -38,8 +38,14 @@ class Author(models.Model):
 
 class Category(models.Model):
     nameNewsCategories = models.CharField(max_length=96, unique=True)
-    subscribers = models.ManyToManyField(User)
+    subscribers = models.ManyToManyField(User, blank=True)
     #
+
+    def subscribe(self):
+        pass
+
+    def get_category(self):
+        return self.nameNewsCategories
 
     def __str__(self):
         return self.nameNewsCategories

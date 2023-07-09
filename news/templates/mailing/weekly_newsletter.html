@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Здравствуй, {{user}}.</h1>
+    <h3> Здесь собраны все статьи вышедшие на сайте
+        <a style="margin-top: 10px;margin-bottom: 20px;" href="http://127.0.0.1:8000/news/">NewsPaper</a>
+    за последнюю неделю по интересующимся вами темам:
+    </h3>
+        {% if posts %} <!-- Если есть новости, то выводим их -->
+
+            <h5 class="post-title"> Посты за неделю: </h5>
+<div class="post-preview">
+        <table>
+            <tr>
+                <td>
+                    Тема
+                </td>
+                <td>
+                    Заголовок
+                </td>
+            </tr>
+
+    {% for post in posts %}
+        <tr>
+                <td>
+                    {% for category in post.get_categories_post %}
+                        {{category}}
+                    {% endfor %}
+                </td>
+                <td>
+                   <a style="margin-top: 10px;margin-bottom: 20px;"
+           href="http://127.0.0.1:8000{% url 'one_news' post.id %}">
+            {{post.headPost}}</a>
+                </td>
+
+       </tr>
+    {% endfor %}
+        </table>
+
+        {% else %}
+            <h3>За неделю новых статьей по вашим темам не выходило!</h3>
+        {% endif %}
+
+
+        <p>Мы надеемся, что темы наших авторов Вам понравятся.</p>
+        <hr>
+        <p>С уважением,</p><br>
+        <p>Команда сайта</p>
+
+</body>
+</html>

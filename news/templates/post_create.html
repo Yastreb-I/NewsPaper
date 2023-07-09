@@ -7,18 +7,25 @@
 {% endblock scripts %}
 
 {% block title %}
-search news
+Создание поста
 {% endblock title %}
 
 {% block content %}
+<p></p>
+ {% if post_to_day < 3 or post.id > 0 %}
 
-    <h1>Создание поста </h1>
+    <h1 class="post-title" >Создание поста </h1>
     <hr>
+
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }} <!-- Теперь нам нужна только готовая форма и кнопка -->
-        <input class="btn btn-primary text-uppercase" type="submit" value="Добавить пост">
+
+        <input class="btn btn-primary text-uppercase" style="margin-top: 10px;margin-bottom: 20px;" type="submit" value="Добавить пост">
     </form>
-    <hr>
+ {% else %}
+     <h1 class="post-title" >На сегодня вами было опубликовано {{post_to_day}} постов, отдохните до завтра! </h1>
+
+{% endif %}
 
 {% endblock content %}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subscription</title>
+</head>
+<body>
+    <h1>Здравствуй, {{user}}. Новая статья в твоём любимом разделе!</h1>
+    <h3>
+        <a style="margin-top: 10px;margin-bottom: 20px;"
+           href="http://127.0.0.1:8000/{% url 'one_news' post.id %}">
+            {{post.headPost}}</a>
+
+    </h3>
+        <p>{{post.preview}}</p>
+    <hr>
+    <p> Автор: {{post.author.userAuthor.username}}</p>
+    <p>С уважением,</p><br>
+    <p>Команда сайта</p>
+</body>
+</html>

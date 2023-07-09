@@ -1,0 +1,76 @@
+{% extends "default.html" %}
+
+{% load static %}
+
+
+
+{% block title %}
+Account {{request.user.username}}
+{% endblock title %}
+
+
+{% block content %}
+<h2 class="post-title"> Страница авторизованного пользователя {{user}}</h2>
+<p> {{test}}</p>
+<h5 class="post-title"> Ваша почта: {{request.user.email}} </h5>
+
+<div>
+{% if is_not_authors %}
+    <hr>
+   <p> Чтобы написать новость/статью нужно
+    <a class="btn btn-primary text-uppercase" href="{% url 'upgrade' %}"> Cтать автором!</a>
+   </p>
+
+    {% else %}
+
+    <p>Количество написанных Вами постов за сегодня - {{post_to_day}}</p>
+{% endif %}
+</div>
+
+{% block categories %}
+
+{% endblock categories %}
+
+<hr>
+<h5 class="post-title"> Управление подписками: </h5>
+<div class="post-preview">
+        <table>
+            <tr>
+                <td>
+                    Тема
+                </td>
+                <td>
+                    Состояние подписки
+                </td>
+            </tr>
+
+    {% for category in categories %}
+        <tr>
+                <td>
+                    {{category.nameNewsCategories}}
+                </td>
+                <td>
+                    {% if category.id in subscribers %}
+                    <a class="account-subscribe-red" tabindex="0" href="{% url 'unsubscribe' category.id %}">
+                        Отписаться
+                    </a>
+                    {%  else  %}
+                    <a class="account-subscribe-green" tabindex="0" href="{% url 'subscribe' category.id %}">
+                        Подписаться
+                    </a>
+                    {%  endif %}
+                </td>
+
+       </tr>
+    {% endfor %}
+        </table>
+
+</div>
+
+<hr class="post-meta">
+<a class="btn btn-primary text-uppercase" style="margin-top: 10px;margin-bottom: 20px;"
+   href="{% url 'account_logout' %}">Выйти из аккаунта</a>
+
+
+
+{% endblock content %}

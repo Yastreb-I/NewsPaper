@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 
+from dotenv import dotenv_values
+config = dotenv_values(".env")
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,7 +26,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_qn4z-)@gyro0r9dl3mqz8f58^o=m_imdnr@=n0o7l6*iw0$9@'
+SECRET_KEY = config["SECRET_KEY"]
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -46,8 +52,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # # ... include the providers you want to enable:
     'allauth.socialaccount.providers.google',
+    'django_apscheduler',
 
-    'news',
+    'news.apps.NewsConfig',
     'accounts',
 ]
 
@@ -128,11 +135,11 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # mandatory - для отправки письма на емаил для подтверждения
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 
 ACCOUNT_FORMS = {'signup': 'accounts.forms.CommonLoginForm',}
 
-# STATICFILES_DIRS = [BASE_DIR / "accounts/templates/account"]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -145,6 +152,13 @@ USE_I18N = True
 
 USE_TZ = True
 
+EMAIL_HOST = config["EMAIL_HOST"]  # адрес сервера Яндекс-почты для всех один и тот же
+EMAIL_PORT = config["EMAIL_PORT"]  # порт smtp сервера тоже одинаковый
+EMAIL_HOST_USER = config["host_user_email"]
+EMAIL_HOST_PASSWORD = config["password_email"]  # пароль от почты
+EMAIL_USE_SSL = config["EMAIL_USE_SSL"]
+
+DEFAULT_FROM_EMAIL = config["email"]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -152,9 +166,25 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static"
+    BASE_DIR / "static",
+    "accounts/static/",
+
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Настройки APSCHEDULER
+# формат даты, которую будет воспринимать наш задачник
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+
+# если задача не выполняется за 25 секунд,
+# то она автоматически снимается, можно поставить время побольше,
+# но как правило, это сильно бьёт по производительности сервера
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+
+# Отправка пользователю емаил сообщений в консоль, а не на почту
+if DEBUG:
+     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

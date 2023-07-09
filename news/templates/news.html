@@ -22,21 +22,30 @@ News
             </a>
                 <h3 class="post-subtitle"> {{ news.textPost|truncatewords:20 | censor}}</h3>
                 <p class="post-meta"> Опубликовано
-                    <a href="{% url 'search' news.author.id %}"> {{ news.author.userAuthor.username }}</a>  <!-- добавить ссылку на поиск по автору -->
-                    в {{ news.dateCreation | date:'d M Y h:m' }}
-                    <a href="#!"><u> Подписаться на автора </u></a> <!-- добавим ссылку на рассылку-->
+                    <a href="{% url 'search' %}?author={{news.author.pk}}"> {{ news.author.userAuthor.username }}</a>
+                    в {{news.dateCreation | date:'d M Y h:m' }}
+
+                     {% if user.is_authenticated and news.author.userAuthor_id == request.user.id %}
+                        <a href="{% url 'post_update' news.id %}"><u> Редактировать </u></a>
+                        <a href="{% url 'post_delete' news.id %}"><u> Удалить </u></a>
+                     {% else %}
+
+                       <!-- <a href="#!"><u> Подписаться на автора </u></a>--> <!--добавим ссылку на рассылку -->
+                     {% endif %}
                 </p>
-                <p class="post-meta"> Категория: {% for category in news.get_categories_post %}
-                                                    <a href="{% url 'search' category.id %}"> {{category}}</a>  <!-- добавим ссылку на сортировку по категориям-->
-                                                    <a href="#!"><u> Подписаться на {{category}}</u></a> <!-- добавим ссылку на рассылку {{ news.categoriesPost }}-->
+                <p class="post-meta">
+                    Категория: {% for category in news.get_categories_post %}
+                        <a href="{% url 'search' %}?categoriesPost={{category.pk}}">{{category}}</a>
+                                {% if category.id not in cat_sub %}
+                                    {% if user.is_authenticated %}
+                                        <a href="{% url 'subscribe' category.id %}"><u> Подписаться на {{category}}</u></a> <!-- добавим ссылку на рассылку {{ news.categoriesPost }}-->
+                                    {% else %}
+                                        <a href="{% url 'account_login' %}"><u> Подписаться на {{category}}</u></a>
+                                    {% endif %}
+                                {% endif %}
+
                     {% endfor %}
 
-
-
-                    {% if is_author %}
-                        <a href="{% url 'post_update' news.id %}"><u> Редактировать </u></a> <!-- добавим ссылку на редактирование статьи-->
-                        <a href="{% url 'post_delete' news.id %}"><u> Удалить </u></a> <!-- добавим ссылку на удаление статьи-->
-                    {% endif %}
                 </p>
 
             </div>
@@ -45,7 +54,7 @@ News
 
         {% endfor %}
 
-        {% if paginator.count > 3 %}
+        {% if paginator.count > 5 %}
              <!-- Pager-->
 <!--                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>-->
             <div class="pagers" style="display: flex;justify-content: space-between;">
@@ -70,8 +79,13 @@ News
             <!-- Если есть следующая страница, то даём ссылку на неё и на самую последнюю страницу -->
 <!--                <span class="page_last">-->
                 {% if page_obj.has_next %}
-                  <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="?page={{ page_obj.next_page_number }}">    >    </a></div>
-                  <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="?page={{ page_obj.paginator.num_pages }}">Последняя</a></div>
+                  <div class="d-flex justify-content-end mb-4">
+                      <a class="btn btn-primary text-uppercase" href="?page={{ page_obj.next_page_number }}">   >   </a>
+                  </div>
+                  <div class="d-flex justify-content-end mb-4">
+                      <a class="btn btn-primary text-uppercase" href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+                  </div>
+
                 {% endif %}
 <!--                </span>-->
             </div>
