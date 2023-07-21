@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from django.core.cache import cache
 
 from allauth.account.forms import SignupForm
 from django.contrib.auth.models import Group
@@ -38,9 +39,20 @@ class Author(models.Model):
 
 class Category(models.Model):
     nameNewsCategories = models.CharField(max_length=96, unique=True)
+    subscribers = models.ManyToManyField(User, blank=True)
+    #
+
+    def subscribe(self):
+        pass
+
+    def get_category(self):
+        return self.nameNewsCategories
 
     def __str__(self):
         return self.nameNewsCategories
+    #
+    # def __repr__(self):
+    #     return self.nameNewsCategories
 
 
 class Post(models.Model):
@@ -64,10 +76,17 @@ class Post(models.Model):
 
         return str_post
 
+    def get_categories_post(self):
+        return self.categoriesPost.all()
+
     # добавим абсолютный путь,
     # чтобы после создания нас перебрасывало на страницу с новостью
     def get_absolute_url(self):
-         return f'/news/{self.id}'
+        return f'/news/{self.id}'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # сначала вызываем метод родителя, чтобы объект сохранился
+        cache.delete(f'{self.pk}')  # затем удаляем его из кэша, чтобы сбросить его
 
     def like(self):
         self.ratingPost += 1

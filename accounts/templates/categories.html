@@ -1,0 +1,30 @@
+{% extends "accounts/templates/user_account.html" %}
+
+{% block categories %}
+<hr>
+<h5 class="post-title"> Управление подписками:  </h5>
+<div class="post-preview">
+        <table>
+            <tr>
+                <td>
+                    Тема
+                </td>
+                <td>
+                    Состояние подписки
+                </td>
+            </tr>
+    {% for category in categories %}
+        <tr>
+                <td>
+                    {{category.name}} <!-- не забываем, что переменные в шаблоне ничем не отличаются от переменных в python. Здесь так же можно получать доступ к полям класса. Например, здесь мы выводим имя, в следующем столбце описание, и т.д.  -->
+                </td>
+                <td>
+                    {{category.subscribers}}
+                </td>
+
+       </tr>
+    {% endfor %}
+        </table>
+
+</div>
+{% endblock categories %}

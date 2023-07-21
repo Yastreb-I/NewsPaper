@@ -9,11 +9,11 @@
 
 
 {% block content %}
-<h1>{{ one_news.headPost | censor }}</h1>
-<h6> {{ one_news.dateCreation | date:'d M Y h:m' }}</h6>
-<p> {{ one_news.textPost | censor }}</p>
+<h1>{{one_news.headPost|censor}}</h1>
+<h6> {{one_news.dateCreation|date:'d M Y h:m'}}</h6>
+<p> {{one_news.textPost|censor|linebreaks}}</p>
 
-<h6>{{ one_news.author.userAuthor.username }}</h6>
+<h6> <a href="{% url 'search' %}?author={{one_news.author.pk}}"> {{one_news.author.userAuthor.username}}</a></h6>
 
 <div class="d-flex justify-content-end mb-4">
     <a class="btn btn-primary text-uppercase" href="{% url 'news' %}">На главную →</a>

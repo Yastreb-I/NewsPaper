@@ -13,12 +13,12 @@
     <hr>
         <!-- Post preview-->
             <div class="post-preview">
-                <h2 class="post-title">{{ post.headPost }}</h2>
+                <h2 class="post-title">{{post.headPost}}</h2>
                 </a>
-                <h3 class="post-subtitle"> {{ post.textPost }}</h3>
+                <h3 class="post-subtitle"> {{post.textPost|linebreaks}}</h3>
 
               <p class="post-meta">
-                  Posted by {{ post.author.userAuthor.username }}
+                  Posted by {{post.author.userAuthor.username}}
               </p>
             </div>
             <!-- Divider-->

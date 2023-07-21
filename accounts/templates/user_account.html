@@ -1,0 +1,110 @@
+{% extends "default.html" %}
+
+{% load static %}
+
+
+
+{% block title %}
+Account {{request.user.username}}
+{% endblock title %}
+
+
+{% block content %}
+<h2 class="post-title"> Страница авторизованного пользователя {{user}}</h2>
+<p> {{test}}</p>
+<h5 class="post-title"> Ваша почта: {{request.user.email}} </h5>
+
+<div>
+
+<hr>
+<h5 class="post-title"> Управление подписками: </h5>
+<div class="post-preview">
+        <table>
+            <tr>
+                <td>
+                    Тема
+                </td>
+                <td>
+                    Состояние подписки
+                </td>
+            </tr>
+
+    {% for category in categories %}
+        <tr>
+                <td>
+                    {{category.nameNewsCategories}}
+                </td>
+                <td>
+                    {% if category.id in subscribers %}
+                    <a class="account-subscribe-red" tabindex="0" href="{% url 'unsubscribe' category.id %}">
+                        Отписаться
+                    </a>
+                    {%  else  %}
+                    <a class="account-subscribe-green" tabindex="0" href="{% url 'subscribe' category.id %}">
+                        Подписаться
+                    </a>
+                    {%  endif %}
+                </td>
+
+       </tr>
+    {% endfor %}
+        </table>
+
+</div>
+    <hr>
+{% if is_not_authors %}
+    <p> Чтобы написать новость/статью нужно
+        <a class="btn btn-primary text-uppercase" href="{% url 'upgrade' %}"> Cтать автором!</a>
+    </p>
+
+    {% else %}
+
+    <p>Количество написанных Вами постов за сегодня - {{post_to_day}}</p>
+
+    <h5 class="post-title"> Ваши посты: </h5>
+
+    <div class="post-preview">
+        <table>
+            <tr>
+                <td>
+                    Заголовок
+                </td>
+                <td>
+                    Тип поста
+                </td>
+                <td>
+                    Дата публикации
+                </td>
+                <td>
+                    Рейтинг публикации
+                </td>
+
+            </tr>
+        {% for post in posts %}
+            <tr>
+                <td>
+                    <a href="{% url 'one_news' post.id %}"> {{post.headPost}} </a>
+                </td>
+                <td>
+                    {{post.typePost}}
+                </td>
+                <td>
+                    {{post.dateCreation}}
+                </td>
+                <td>
+                    {{post.ratingPost}}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+{% endif %}
+</div>
+
+<hr class="post-meta">
+<a class="btn btn-primary text-uppercase" style="margin-top: 10px;margin-bottom: 20px;"
+   href="{% url 'account_logout' %}">Выйти из аккаунта</a>
+
+
+{% endblock content %}
