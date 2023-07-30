@@ -21,20 +21,20 @@ Account {{request.user.username}}
 <div class="post-preview">
         <table>
             <tr>
-                <td>
+                <td class="category-td-pd-15">
                     Тема
                 </td>
-                <td>
+                <td class="category-td-pd-15">
                     Состояние подписки
                 </td>
             </tr>
 
     {% for category in categories %}
         <tr>
-                <td>
+                <td class="category-td-pd-15">
                     {{category.nameNewsCategories}}
                 </td>
-                <td>
+                <td class="category-td-pd-15">
                     {% if category.id in subscribers %}
                     <a class="account-subscribe-red" tabindex="0" href="{% url 'unsubscribe' category.id %}">
                         Отписаться

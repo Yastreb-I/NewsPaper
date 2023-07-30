@@ -13,6 +13,9 @@ from django.utils import timezone
 
 from datetime import datetime, timedelta
 from news.models import Author, Category, Post
+import logging
+
+logger = logging.getLogger("django")
 
 
 @login_required
@@ -55,8 +58,8 @@ class UserAccountView(LoginRequiredMixin, TemplateView):
         context['categories'] = categories
         context['subscribers'] = subscribers_user
 
-
         return context
+
 
 # Сообщение о подписке пользователя на категорию
 @login_required
@@ -80,7 +83,7 @@ def subscribe_to_category(request, pk):
         try:
             mesg.send()  # отсылаем
         except Exception as e:
-            print(e)
+            logger.exception(e)
         return redirect(request.META.get('HTTP_REFERER'))
     return redirect(request.META.get('HTTP_REFERER'))
 

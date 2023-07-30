@@ -17,6 +17,11 @@
     color: darkorange;
 }
 
+.category-td-pd-15 {
+    padding-left: 15px;
+    padding-bottom: 10px;
+    }
+
 a.account-subscribe-red {
   position: relative;
   display: inline-block;
@@ -63,3 +68,4 @@ a.account-subscribe-green:active {
   left: .1em;
   box-shadow: 0 0 0 60px rgba(0,0,0,.05) inset;
 }
+
