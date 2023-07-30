@@ -27,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True  # False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -62,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'news.middleware.messages.Device',
+    'news.middleware.messages.Device',
 
 ]
 
@@ -147,6 +147,11 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+#  Администраторы сайта
+ADMINS = (
+    (config["host_user_email"], config["email"]),
+)
 
 EMAIL_HOST = config["EMAIL_HOST"]  # адрес сервера Яндекс-почты для всех один и тот же
 EMAIL_PORT = config["EMAIL_PORT"]  # порт smtp сервера тоже одинаковый
@@ -263,7 +268,8 @@ LOGGING = {
             "class": "logging.FileHandler",
             'formatter': 'fail_info',
             'filters': ['require_debug_false'],
-            "filename": os.path.join(BASE_DIR, 'logs/general.log'),
+            "filename": f'{BASE_DIR}/logs/general.log',
+            "encoding": 'utf-8',
         },
 
         "fail_errors": {
@@ -272,6 +278,7 @@ LOGGING = {
             'formatter': 'fail_error',
             'filters': ['require_debug_false'],
             "filename": os.path.join(BASE_DIR, 'logs/errors.log'),
+            "encoding": 'utf-8',
         },
         "fail_security": {
             "level": "INFO",
@@ -279,6 +286,7 @@ LOGGING = {
             'formatter': 'fail_security',
             'filters': ['require_debug_false'],
             "filename": os.path.join(BASE_DIR, 'logs/security.log'),
+            "encoding": 'utf-8',
         },
 
         'mail_admins': {
@@ -297,27 +305,27 @@ LOGGING = {
         'django.request': {
             'handlers': ['fail_errors', 'mail_admins'],
             'level': 'ERROR',
-            'propagate': False,
+            'propagate': True,
         },
         'django.server': {
             'handlers': ['fail_errors', 'mail_admins'],
             'level': 'ERROR',
-            'propagate': False,
+            'propagate': True,
         },
         'django.template': {
             'handlers': ['fail_errors'],
             'level': 'ERROR',
-            'propagate': False,
+            'propagate': True,
         },
         'django.db_backends': {
             'handlers': ['fail_errors'],
             'level': 'ERROR',
-            'propagate': False,
+            'propagate': True,
         },
         'django.security': {
             'handlers': ['fail_security'],
             'level': 'INFO',
-            'propagate': False,
+            'propagate': True,
         },
     }
 }
