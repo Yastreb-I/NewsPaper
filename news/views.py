@@ -13,10 +13,12 @@ from .models import Post, Category, Author
 from .filters import PostFilter  # импортируем свой фильтр
 from .forms import PostForm
 
-logger = logging.getLogger(__name__)
+logger_dj = logging.getLogger('django')
+# logger_dj_req = logging.getLogger('django.request')
 
 
 class NewsList(ListView):
+
     model = Post  # указываем модель, объекты которой мы будем выводить
     template_name = 'news.html'  # указываем имя шаблона, в котором будет лежать HTML,
     # в нём будут все инструкции о том, как именно пользователю должны вывестись наши объекты
@@ -28,16 +30,20 @@ class NewsList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['time_now'] = datetime.utcnow()  # добавим переменную текущей даты time_now
-        context['is_not_group_author'] = not self.request.user.groups.filter(name='authors').exists()
-        # registered_user = self.request.user.groups.filter(name='common').exists()
         user = self.request.user
         categorise = Category.objects.all()
         subsc_list = []
-        if user.is_authenticated:
-            for category in categorise:
-                if category.subscribers.filter(email=user.email).exists():
-                    subsc_list.append(category.id)
-        context['cat_sub'] = subsc_list
+        try:
+            context['is_not_group_author'] = not self.request.user.groups.filter(name='authors').exists()
+            # registered_user = self.request.user.groups.filter(name='common').exists()
+            if user.is_authenticated:
+                for category in categorise:
+                    if category.subscribers.filter(email=user.email).exists():
+                        subsc_list.append(category.id)
+            context['cat_sub'] = subsc_list
+        except Exception as e:
+            logger_dj.exception(e)
+
         return context
 
 
@@ -99,7 +105,7 @@ class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        form = self.form_class(request.POST, user )  # создаём новую форму, забиваем в неё данные из POST-запроса
+        form = self.form_class(request.POST, user)  # создаём новую форму, забиваем в неё данные из POST-запроса
         if form.is_valid():  # если пользователь ввёл всё правильно и нигде не накосячил, то сохраняем новый пост
             post = form.save()
             post.author = Author.objects.get_or_create(userAuthor=user)[0]
